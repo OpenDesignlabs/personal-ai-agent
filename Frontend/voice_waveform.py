@@ -19,6 +19,7 @@ except Exception as e:
 
 class VoiceWaveform:
     def __init__(self, parent, width=400, height=100):
+        global PYAUDIO_AVAILABLE
         self.parent = parent
         self.width = width
         self.height = height

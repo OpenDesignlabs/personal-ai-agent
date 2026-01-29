@@ -23,11 +23,30 @@ def open_images(prompt):
         except IOError:
             print(f"Unable to open {image_path}")
 
+from Backend.Chatbot import client # Use the existing Groq client
+
 # API details for the Hugging Face Stable Diffusion model
 API_URL = "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-xl-base-1.0"
 env_vars = dotenv_values(os.path.join(os.path.dirname(__file__), '..', '.env'))
 HuggingFaceAPIKey = env_vars.get("HuggingFaceAPIKey")
 headers = {"Authorization": f"Bearer {HuggingFaceAPIKey}"}
+
+def expand_prompt(prompt):
+    """Uses Groq to expand a simple prompt into a professional stable diffusion prompt."""
+    try:
+        system_prompt = "You are a professional AI Art Director. Expand the given user prompt into a highly detailed stable diffusion prompt. Focus on: lighting, camera angle, lens (35mm, 85mm), artistic style (Cyberpunk, Realistic, Oil Painting), and ultra-high details. Keep the final result under 70 words. Respond ONLY with the new prompt."
+        response = client.chat.completions.create(
+            model="llama-3.3-70b-versatile",
+            messages=[{"role": "system", "content": system_prompt}, {"role": "user", "content": prompt}],
+            max_tokens=200,
+            temperature=0.7
+        )
+        expanded = response.choices[0].message.content.strip()
+        print(f"Expanded Prompt: {expanded}")
+        return expanded
+    except Exception as e:
+        print(f"Prompt expansion failed: {e}")
+        return prompt # Fallback to original prompt
 
 async def query(payload):
     response = await asyncio.to_thread(requests.post, API_URL, headers=headers, json=payload)
@@ -35,11 +54,12 @@ async def query(payload):
 
 # Async function to generate images based on the given prompt
 async def generate_images(prompt: str):
+    expanded_prompt = expand_prompt(prompt)
     tasks = []
     # Create 4 image generation tasks
     for _ in range(4):
         payload = {
-            "inputs": f"{prompt}, quality=4K, sharpness=maximum, Ultra High details, high resolution, seed={randint(0, 1000000)}",
+            "inputs": f"{expanded_prompt}, quality=4K, sharpness=maximum, Ultra High details, high resolution, seed={randint(0, 1000000)}",
         }
         task = asyncio.create_task(query(payload))
         tasks.append(task)
@@ -58,7 +78,9 @@ def GenerateImages(prompt: str):
 
 # Main loop to monitor for image generation requests
 def main():
-    file_path = r"E:\COde\py\jarvisAI\Frontend\Files\ImageGenration.data"
+    # Use relative path based on project structure
+    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    file_path = os.path.join(base_dir, "Frontend", "Files", "ImageGenration.data")
     try:
         with open(file_path, "r") as f:
             Data: str = f.read()

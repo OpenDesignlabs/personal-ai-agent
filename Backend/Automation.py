@@ -33,7 +33,7 @@ professional_responses = [
 # List to store chatbot messages.
 messages =[ ]
 # System message to provide context to the chatbot.
-SystemChatBot = [{"role": "system", "content": f"Hello, I am {os.environ[ 'Username']}, You're a content writer. You're a content writer. You have to write content like letters, codes, applications, essays, notes, songs, poems etc."}]
+SystemChatBot = [{"role": "system", "content": f"Hello, I am {env_vars.get('Username', 'User')}, You're a content writer. You have to write content like letters, codes, applications, essays, notes, songs, poems etc."}]
 
 #Function to perform a Google search.
 def GoogleSearch(Topic):
@@ -107,11 +107,11 @@ def OpenApp(app, sess=requests.session()):
     except :
 # Nested function to extract links from HTML content.
         def extract_links(html):
-           if html is None:
-             return []
-             soup = BeautifulSoup(html, 'html.parser') # Parse the HTML content.
-             Links = soup.find_all('a', {'jsname': 'UWckNb'}) # Find relevant links.
-             return [link.get('href' ) for link in links]
+            if html is None:
+                return []
+            soup = BeautifulSoup(html, 'html.parser') # Parse the HTML content.
+            links = soup.find_all('a', {'jsname': 'UWckNb'}) # Find relevant links.
+            return [link.get('href') for link in links]
 # Return the links.
 # Nested function to perform a Google search and retrieve HTML.
         def search_google(query):

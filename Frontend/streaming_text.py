@@ -73,13 +73,15 @@ class StreamingTextWidget:
             return
             
         self.streaming_text += text_chunk
-        self.current_label.configure(text=self.streaming_text)
-        
-        # Scroll to bottom
-        self.frame._parent_canvas.yview_moveto(1.0)
+        try:
+            # Use root.after or direct config if sure about thread
+            self.current_label.configure(text=self.streaming_text)
+            self.frame._parent_canvas.yview_moveto(1.0)
+        except: pass
         
         # Small delay for typing effect
-        time.sleep(delay)
+        if delay > 0:
+            time.sleep(delay)
         
     def finish_streaming(self):
         """Finish the current streaming message"""

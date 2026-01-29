@@ -62,6 +62,11 @@ def UniversalTranslator(Text):
     except Exception as e:
         return Text
 
+# Load the Whisper model once at startup to improve performance
+print("Loading Whisper model...")
+model = whisper.load_model("small")  # small model for better speed/accuracy balance
+print("Model loaded.")
+
 # Function to record audio and perform speech recognition using Whisper
 def SpeechRecognition():
     try:
@@ -114,9 +119,8 @@ def SpeechRecognition():
         except Exception as e:
             return "[Audio file saving error]"
 
-        # Transcribe the audio using Whisper
+        # Transcribe the audio using the pre-loaded Whisper model
         try:
-            model = whisper.load_model("small")  # Changed to small model for speed
             if os.path.exists(TEMP_AUDIO_PATH) and os.path.getsize(TEMP_AUDIO_PATH) > 0:
                 result = model.transcribe(TEMP_AUDIO_PATH, fp16=False)  # CPU-only, FP32
                 text = result["text"].strip()

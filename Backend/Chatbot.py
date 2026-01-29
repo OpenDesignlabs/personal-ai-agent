@@ -4,6 +4,9 @@ from json import load, dump  # Importing functions to read and write JSON files.
 import datetime  # Importing the datetime module for real-time date and time information.
 from dotenv import dotenv_values  # Importing dotenv_values to read environment variables from a .env file.
 
+from Backend.Memory import search_memory, get_last_conversation
+from Backend.Sentiment import analyze_sentiment, get_personality_prompt
+
 # Load environment variables from the .env file
 env_vars = dotenv_values(os.path.join(os.path.dirname(__file__), '..', '.env'))
 Username = env_vars.get("Username")
@@ -15,13 +18,21 @@ if not GroqAPIKey:
     raise ValueError("GroqAPIKey not found in environment variables")
 client = Groq(api_key=GroqAPIKey)
 
-# Define a system message that provides context to the AI chatbot
-System = f"""Hello, I am {Username}, You are a very accurate and advanced AI chatbot named {Assistantname} which also has real-time up-to-date information from the internet.
+def get_system_message(query):
+    """Dynamic system message based on sentiment and memory."""
+    sentiment = analyze_sentiment(query)
+    personality = get_personality_prompt(sentiment)
+    memory = search_memory(query)
+    
+    return f"""Hello, I am {Username}, You are a very accurate and advanced AI chatbot named {Assistantname} which also has real-time up-to-date information from the internet.
+*** Personality Update: {personality} ***
+*** Context from Memory: {memory} ***
 *** Do not tell time until I ask, do not talk too much, just answer the question.***
 *** Reply in only English, even if the question is in Hindi, reply in English.***
 """
 
-SystemChatBot = [{"role": "system", "content": System}]
+# Base SystemChatBot setup (will be modified per query)
+SystemChatBot = [{"role": "system", "content": "You are a helpful assistant."}]
 
 # Function to get real-time date and time information
 def RealtimeInformation():
@@ -75,9 +86,12 @@ def ChatBot(Query):
             response = f"{greeting} {Username} sir, my Self {Assistantname}. What kind of help I do for you?"
         else:
             # Get response from Groq API for non-greeting queries
+            dynamic_system = get_system_message(Query)
             completion = client.chat.completions.create(
                 model="llama-3.3-70b-versatile",
-                messages=SystemChatBot + [{"role": "system", "content": RealtimeInformation()}] + messages,
+                messages=[{"role": "system", "content": dynamic_system}] + 
+                         [{"role": "system", "content": RealtimeInformation()}] + 
+                         messages,
                 max_tokens=1024,
                 temperature=0.7,
                 top_p=1,

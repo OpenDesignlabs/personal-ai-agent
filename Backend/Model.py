@@ -97,11 +97,27 @@ def FirstLayerDMM(prompt: str = "test"):
     if any(word in prompt_lower for word in image_keywords):
         return [f"generate image {prompt}"]
     
-    # Check for system commands
-    system_keywords = ['mute', 'unmute', 'volume', 'shutdown', 'restart']
-    if any(word in prompt_lower for word in system_keywords):
-        return [f"system {prompt}"]
-    
+    # Check for health/stats commands
+    health_keywords = ['system stats', 'health', 'pc stats', 'performance']
+    if any(word in prompt_lower for word in health_keywords):
+        return ["health"]
+
+    # Check for reminder commands
+    if 'remind' in prompt_lower or 'reminder' in prompt_lower:
+        # Simple extraction for logic
+        return [f"reminder {prompt}"]
+
+    # Check for Vision/Screen commands
+    vision_keywords = ['look at', 'see', 'what is on my screen', 'analyze screen', 'explain screen']
+    if any(word in prompt_lower for word in vision_keywords):
+        return [f"vision {prompt}"]
+
+    # Check for External Hub (Email/WhatsApp)
+    if 'email' in prompt_lower:
+        return [f"email {prompt}"]
+    if 'whatsapp' in prompt_lower or 'send message' in prompt_lower:
+        return [f"whatsapp {prompt}"]
+
     # Default to general chat
     return [f"general {prompt}"]
 

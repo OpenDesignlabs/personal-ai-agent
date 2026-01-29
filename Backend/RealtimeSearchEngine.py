@@ -5,6 +5,8 @@ from json import load, dump  # Importing functions to read and write JSON files.
 import datetime  # Importing the datetime module for real-time date and time information.
 from dotenv import dotenv_values  # Importing dotenv_values to read environment variables from a .env file.
  
+from Backend.WebScraper import research_topic
+
 # Load environment variables from the .env file
 env_vars = dotenv_values(os.path.join(os.path.dirname(__file__), '..', '.env'))
 Username = env_vars.get("Username")
@@ -14,10 +16,11 @@ GroqAPIKey = env_vars.get("GroqAPIKey")
 # Initialize the Groq client using the provided API key
 client = Groq(api_key=GroqAPIKey)
 
-# Define a system message that provides context to the AI chatbot
-System = f"""Hello, I am {Username}, You are a very accurate and advanced AI chatbot named {Assistantname} which has real-time up-to-date information from the internet.
-*** Provide Answers In a Professional Way, make sure to add full stops, commas, question marks, and use proper grammar.***
-*** Just answer the question from the provided data in a professional way. ***"""
+# Define a system message that provides context for the Researcher
+System = f"""Hello, I am {Username}, You are an Autonomous Research Agent named {Assistantname}.
+Your job is to read the provided website content and create a professional, accurate, and cited report.
+*** Strictly use ONLY the provided data. If information is missing, say you don't know. ***
+*** Always cite your sources by mentioning the domain name. ***"""
 
 
 #Try to load the chat log from a JSON file, or create an empty one if it doesn't exist.
@@ -42,7 +45,7 @@ def GoogleSearch(query):
     Answer = f"The search results for '{query}' are:\n[start]\n"
 
     for i in results:
-     Answer + f"Title: {i.title}\nDescription: {i.description}\n\n"
+        Answer += f"Title: {i.title}\nDescription: {i.description}\n\n"
     Answer += "[end]"
     return Answer
 
@@ -116,13 +119,27 @@ def RealtimeSearchEngine(prompt):
     # Load the chat log from the JSON file.
     with open(r"Data\ChatLog.json", "r") as f:
         messages = load(f)
+    
+    # 1. Perform Google Search to get URLs
+    search_results = list(search(prompt, advanced=True, num_results=3))
+    urls = [res.url for res in search_results]
+    
+    # 2. Scrape the content of those URLs
+    print(f"Deep researching: {urls}")
+    deep_content = research_topic(urls)
+    
     messages.append({"role": "user", "content": f"{prompt}"})
-    # Add Google search results to the system chatbot messages.
-    SystemChatBot.append({"role": "system", "content": GoogleSearch(prompt)})
+    
+    # 3. Feed the deep content into the LLM
+    research_context = f"Here is the deep research data from the web:\n{deep_content}"
+    
     # Generate a response using the Groq client.
     completion = client.chat.completions.create(
-        model="llama3-70b-8192",
-        messages=SystemChatBot + [{"role": "system", "content": Information()}] + messages,
+        model="llama-3.3-70b-versatile",
+        messages=[{"role": "system", "content": System}] + 
+                 [{"role": "system", "content": research_context}] + 
+                 [{"role": "system", "content": Information()}] + 
+                 messages,
         temperature=0.7,
         max_tokens=2048,
         top_p=1,
