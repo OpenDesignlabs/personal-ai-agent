@@ -1,0 +1,35 @@
+# Core dependencies
+python-dotenv>=1.0.0
+groq>=0.8.0
+requests>=2.31.0
+
+# AI/ML dependencies (Python 3.14 compatible)
+numpy>=1.21.0
+whisper>=1.1.10
+Pillow>=10.0.0
+
+# Audio/Speech dependencies
+pyaudio>=0.2.14
+edge-tts>=6.1.12
+pygame>=2.1.0
+
+# Automation/Web dependencies
+AppOpener>=1.7
+pywhatkit>=5.4
+selenium>=4.15.0
+webdriver-manager>=4.0.0
+googlesearch-python>=1.2.0
+
+# Text processing
+bs4>=0.0.2
+beautifulsoup4>=4.12.0
+mtranslate>=1.8.0
+
+# UI dependencies
+customtkinter>=5.2.0
+PyQt5>=5.15.10
+
+# System utilities
+keyboard>=0.13.5
+cohere>=5.0.0
+rich>=13.0.0
