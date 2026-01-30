@@ -1,40 +1,41 @@
-# 🤖 Jarvis AI - Advanced AI Assistant
+# 🤖 JARVIS PRIME - Elite Neural Interface
 
-**🎉 A powerful AI assistant with voice recognition, real-time search, image generation, and system automation capabilities.**
-
----
-
-## 🌟 **Overview**
-
-Jarvis AI is a sophisticated AI assistant that combines multiple AI models and services to provide a comprehensive conversational experience. Built with Python 3.10 for maximum compatibility, Jarvis AI features voice interaction, real-time web search, AI-powered image generation, and complete system automation.
+**🎉 A state-of-the-art autonomous AI system featuring predictive neural loading, multi-array sentient logic, and a high-fidelity Cyberpunk interface.**
 
 ---
 
-## 🚀 **Key Features**
+## 🌟 **The Prime Evolution**
 
-### **🎤 Voice Interaction**
-- **Speech Recognition**: Whisper-powered voice input with PyAudio
-- **Text-to-Speech**: Edge TTS for natural voice synthesis
-- **Voice Commands**: Hands-free operation
-- **Multi-language Support**: Universal translation capabilities
+JARVIS PRIME is no longer just a chatbot; it is a sophisticated **Neural Command System**. Designed with "Tony Stark" levels of sophistication, Prime features real-time system awareness, a predictive "Pre-Heating" module system, and a dynamic resource manager that ensures your PC remains optimized while Jarvis runs in the background.
 
-### **🤖 AI Capabilities**
-- **Conversational AI**: Groq API for intelligent responses
-- **Decision Making**: Cohere AI for command classification
-- **Real-time Search**: Google search integration
-- **Image Generation**: HuggingFace AI for visual content
+---
 
-### **⚙️ System Automation**
-- **Application Control**: Open/close applications
-- **Web Automation**: Browser control and interaction
-- **System Commands**: Volume control, system operations
-- **Content Creation**: Write code, essays, applications
+## 🚀 **Prime Neural Pillars**
 
-### **🎨 Modern Interface**
-- **CustomTkinter GUI**: Modern, responsive interface
-- **Dark/Light Themes**: Customizable appearance
-- **Real-time Status**: Live feedback and updates
-- **Chat History**: Persistent conversation memory
+### **🧠 Pillar I: Sentience Engine (Stark Protocol)**
+- **Witty Professionalism**: Jarvis now communicates with the iconic polite, slightly dry, and sophisticated tone of a digital butler.
+- **Sir/Ma'am Mode**: Intelligent addressing based on user profile.
+- **Adaptive Sentiment**: Responses shift dynamically based on your current emotional state.
+
+### **🌌 Pillar II: Neural Matrix UI**
+- **Neural Array Status**: A real-time grid visualizing the health and status of Vision, Art, Research, and Automation modules.
+- **Pulse Core**: A central interface element that pulses in sync with Jarvis's operations and shifts color based on active neural arrays.
+- **Glassmorphism Design**: A premium, transparent Cyberpunk aesthetic built on CustomTkinter.
+
+### **⚡ Pillar III: Predictive Resource Manager**
+- **Predictive Pre-Heating**: Jarvis monitors your typing in real-time and begins loading heavy modules *before* you even hit Enter.
+- **Idle Hibernation**: Non-essential arrays enter deep sleep after 10 minutes of inactivity to release system resources (RAM/CPU).
+- **Background Sync**: Zero-hang interface—heavy libraries load on separate threads while you chat.
+
+---
+
+## 🛰️ **Core Expansion Packs**
+
+- **👁️ Vision Array**: Real-time screen analysis and multimodal understanding.
+- **🎨 Art Array**: Ultra-HD image generation via Stable Diffusion XL & HuggingFace.
+- **🔍 Research Array**: Deep web scraping, citation-backed reporting, and real-time news extraction.
+- **⚙️ System Array**: Full Windows automation, app control, and hardware hooks.
+- **💻 Code Engine**: Autonomous script execution and self-healing logic.
 
 ---
 
@@ -107,25 +108,22 @@ jarvisAI/
 
 ---
 
-## 🔑 **API Keys Configuration**
+## 🔑 **Neural Link Configuration**
 
-### **Required API Keys:**
+### **Primary Neural Keys:**
 
-| Service | API Key Variable | Purpose |
-|---------|-----------------|---------|
-| **Groq AI** | `GroqAPIKey` | Chat and conversation |
-| **Cohere AI** | `CohereAPIKey` | Decision making |
-| **HuggingFace** | `HuggingFaceAPIKey` | Image generation |
+| Service | Variable | Purpose | Status |
+|---------|-----------------|---------|---------|
+| **Groq AI** | `GroqAPIKey` | Core Reasoning & Vision | Required |
+| **Cohere AI** | `CohereAPIKey` | Decision Matrix (DMM) | Required |
+| **Google Gemini** | `GEMINI_API_KEY` | High-Speed Logic (New SDK) | Required |
+| **HuggingFace** | `HuggingFaceAPIKey` | Neural Art Engine | Required |
 
-### **Optional API Keys:**
-| Service | API Key Variable | Purpose |
-|---------|-----------------|---------|
-| **Google Gemini** | `GEMINI_API_KEY` | Additional AI model |
-
-### **🔧 Setup Instructions:**
-1. Copy `.env.example` to `.env`
-2. Replace placeholder keys with your actual API keys
-3. Ensure no spaces around the `=` sign
+### **📡 System Telemetry (Sentience)**
+Jarvis Prime is physically aware of your host environment. He monitors:
+- **CPU Digital Fatigue**: Adapts tone and efficiency based on processor load.
+- **RAM Allocation**: Actively unloads idle expansion packs to save memory.
+- **Energy Reserve**: Adjusts interface brightness and background tasks based on battery levels (Sir/Ma'am).
 
 ---
 
@@ -165,19 +163,18 @@ jarvisAI/
 - **Launcher**: `jarvis.bat` forces Python 3.10
 - **Compatibility**: All packages tested with Python 3.10
 
-### **📦 Dependencies**
-- **Core**: `tkinter`, `python-dotenv`, `requests`
-- **AI**: `groq`, `cohere`, `openai-whisper`
-- **Audio**: `pyaudio`, `pygame`, `edge-tts`
-- **Web**: `selenium`, `webdriver-manager`, `beautifulsoup4`
-- **Automation**: `AppOpener`, `pywhatkit`, `keyboard`
+### **📦 Neural Frameworks**
+- **Core Engine**: `CustomTkinter`, `python-dotenv`, `google-genai`
+- **Logic Matrix**: `groq`, `cohere`, `google-generativeai` (Migrated to `google-genai`)
+- **Speech Array**: `pyaudio`, `pygame`, `edge-tts`, `openai-whisper`
+- **Automation Kernel**: `AppOpener`, `pywhatkit`, `pyautogui`, `selenium`
 
-### **🔌 API Integrations**
-- **Groq**: Llama 3.3-70B-Versatile model
-- **Cohere**: Command classification
-- **HuggingFace**: Stable Diffusion XL
-- **Edge TTS**: Microsoft Edge text-to-speech
-- **Google Search**: Real-time web search
+### **🔌 Prime API Integrations**
+- **Groq Llama 3.3**: The main neural processor for advanced reasoning.
+- **Gemini 2.0/SDK**: High-speed secondary logic and multimodal analysis.
+- **Cohere Command**: High-precision intent classification and decision mapping.
+- **Semantic Neural Context**: Advanced long-term memory that synthesizes past user behavior into a cohesive context.
+- **HuggingFace SDXL**: Professional-grade image synthesis kernel.
 
 ---
 

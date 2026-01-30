@@ -40,3 +40,10 @@ Data/
 # OS
 .DS_Store
 Thumbs.db
+
+# Private Launcher & Test Scripts
+jarvis.bat
+test_tts_simple.py
+health_check.py
+api_check.py
+jarvis.log

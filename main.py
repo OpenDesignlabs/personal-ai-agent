@@ -43,8 +43,8 @@ def main():
         root.title(f"{assistant_name} - Autonomous Intelligence")
         
         # Window size & Centering
-        window_width = 1100
-        window_height = 750
+        window_width = 1400
+        window_height = 900
         screen_width = root.winfo_screenwidth()
         screen_height = root.winfo_screenheight()
         x = (screen_width // 2) - (window_width // 2)
@@ -52,7 +52,7 @@ def main():
         root.geometry(f"{window_width}x{window_height}+{x}+{y}")
         
         # Design Attributes
-        root.attributes("-alpha", 0.98) # Slight transparency for premium feel
+        # root.attributes("-alpha", 0.98) # Option removed for stability in Prime UI
         
         # Initialize the Redesigned App
         app = JarvisAIApp(root)

@@ -8,33 +8,35 @@ from dotenv import dotenv_values  # Importing dotenv_values to read environment 
 from Backend.WebScraper import research_topic
 
 # Load environment variables from the .env file
-env_vars = dotenv_values(os.path.join(os.path.dirname(__file__), '..', '.env'))
+ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+env_vars = dotenv_values(os.path.join(ROOT_DIR, '.env'))
 Username = env_vars.get("Username")
 Assistantname = env_vars.get("Assistantname")
 GroqAPIKey = env_vars.get("GroqAPIKey")
 
+# Ensure Data directory exists in root
+DATA_DIR = os.path.join(ROOT_DIR, "Data")
+os.makedirs(DATA_DIR, exist_ok=True)
+CHAT_LOG_PATH = os.path.join(DATA_DIR, "ChatLog.json")
+
 # Initialize the Groq client using the provided API key
 client = Groq(api_key=GroqAPIKey)
 
-# Define a system message that provides context for the Researcher
+# Define a system message for the Researcher
 System = f"""Hello, I am {Username}, You are an Autonomous Research Agent named {Assistantname}.
-Your job is to read the provided website content and create a professional, accurate, and cited report.
-*** Strictly use ONLY the provided data. If information is missing, say you don't know. ***
-*** Always cite your sources by mentioning the domain name. ***"""
+Your job is to read the provided website content and create a professional, accurate, and cited report."""
 
-
-#Try to load the chat log from a JSON file, or create an empty one if it doesn't exist.
-
+# Try to load the chat log
 try:
-
-    with open(r"Data\ChatLog.json", "r") as f:
-
-     messages = load(f)
-
-except:
-
- with open(r"Data\ChatLog.json", "w") as f: 
-     dump([], f)
+    if os.path.exists(CHAT_LOG_PATH):
+        with open(CHAT_LOG_PATH, "r") as f:
+            messages = load(f)
+    else:
+        messages = []
+        with open(CHAT_LOG_PATH, "w") as f:
+            dump(messages, f)
+except Exception:
+    messages = []
 
 #Function to perform a Google search and format the results.
 
@@ -117,7 +119,7 @@ def Information():
 def RealtimeSearchEngine(prompt):
     global SystemChatBot, messages
     # Load the chat log from the JSON file.
-    with open(r"Data\ChatLog.json", "r") as f:
+    with open(CHAT_LOG_PATH, "r") as f:
         messages = load(f)
     
     # 1. Perform Google Search to get URLs
@@ -155,7 +157,7 @@ def RealtimeSearchEngine(prompt):
     Answer = Answer.strip().replace("</s>", "")
     messages.append({"role": "assistant", "content": Answer})
     # Save the updated chat log back to the JSON file.
-    with open(r"Data\ChatLog.json", "w") as f:
+    with open(CHAT_LOG_PATH, "w") as f:
         dump(messages, f, indent=4)
     # Remove the most recent system message from the chatbot conversation.
     SystemChatBot.pop()

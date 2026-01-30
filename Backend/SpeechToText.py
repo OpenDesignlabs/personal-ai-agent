@@ -12,7 +12,8 @@ except ImportError as e:
     raise
 
 # Load environment variables from the .env file.
-env_vars = dotenv_values(os.path.join(os.path.dirname(__file__), '..', '.env'))
+ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+env_vars = dotenv_values(os.path.join(ROOT_DIR, '.env'))
 InputLanguage = env_vars.get("InputLanguage", "en")
 
 # Audio recording parameters
@@ -20,16 +21,14 @@ CHUNK = 1024
 FORMAT = pyaudio.paInt16
 CHANNELS = 1
 RATE = 16000
-RECORD_SECONDS = 5  # Reduced from 10 for faster processing
-TEMP_AUDIO_PATH = "Data/temp_audio.wav"
+RECORD_SECONDS = 5
+DATA_DIR = os.path.join(ROOT_DIR, "Data")
+os.makedirs(DATA_DIR, exist_ok=True)
+TEMP_AUDIO_PATH = os.path.join(DATA_DIR, "temp_audio.wav")
 silence_threshold = 50
 
-# Ensure Data directory exists
-os.makedirs("Data", exist_ok=True)
-
 # Define the path for temporary files.
-current_dir = os.getcwd()
-TempDirPath = os.path.join(current_dir, "Frontend", "Files")
+TempDirPath = os.path.join(ROOT_DIR, "Frontend", "Files")
 os.makedirs(TempDirPath, exist_ok=True)
 
 # Function to set the assistant's status by writing it to a file.

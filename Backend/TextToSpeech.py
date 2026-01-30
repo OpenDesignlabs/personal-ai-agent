@@ -7,12 +7,14 @@ from dotenv import dotenv_values
 import requests  # For network check
 
 # Load environment variables from a .env file
-env_vars = dotenv_values(os.path.join(os.path.dirname(__file__), '..', '.env'))
+ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+env_vars = dotenv_values(os.path.join(ROOT_DIR, '.env'))
 AssistantVoice = env_vars.get("AssistantVoice", "en-CA-LiamNeural")  # Default voice
 print(f"Loaded AssistantVoice: {AssistantVoice}")
 
 # Ensure Data directory exists
-os.makedirs("Data", exist_ok=True)
+DATA_DIR = os.path.join(ROOT_DIR, "Data")
+os.makedirs(DATA_DIR, exist_ok=True)
 
 # Global event loop to manage asyncio
 loop = asyncio.new_event_loop()
@@ -29,7 +31,7 @@ def check_internet():
 
 # Asynchronous function to convert text to an audio file
 async def text_to_audio(text):
-    file_path = os.path.join("Data", "speech.mp3")
+    file_path = os.path.join(DATA_DIR, "speech.mp3")
     if os.path.exists(file_path):
         try:
             os.remove(file_path)
@@ -56,7 +58,7 @@ def tts(text, func=lambda: True):
         if not check_internet():
             raise ConnectionError("Internet is required for audio generation.")
         loop.run_until_complete(text_to_audio(text))
-        file_path = os.path.join("Data", "speech.mp3")
+        file_path = os.path.join(DATA_DIR, "speech.mp3")
         if not os.path.exists(file_path):
             raise FileNotFoundError(f"Audio file not found: {file_path}")
         

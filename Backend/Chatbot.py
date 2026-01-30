@@ -6,12 +6,19 @@ from dotenv import dotenv_values  # Importing dotenv_values to read environment 
 
 from Backend.Memory import search_memory, get_last_conversation
 from Backend.Sentiment import analyze_sentiment, get_personality_prompt
+from Backend.SystemHealth import get_system_stats
 
 # Load environment variables from the .env file
-env_vars = dotenv_values(os.path.join(os.path.dirname(__file__), '..', '.env'))
+ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+env_vars = dotenv_values(os.path.join(ROOT_DIR, '.env'))
 Username = env_vars.get("Username")
 Assistantname = env_vars.get("Assistantname")
 GroqAPIKey = env_vars.get("GroqAPIKey")
+
+# Ensure Data directory exists in root
+DATA_DIR = os.path.join(ROOT_DIR, "Data")
+os.makedirs(DATA_DIR, exist_ok=True)
+CHAT_LOG_PATH = os.path.join(DATA_DIR, "ChatLog.json")
 
 # Initialize the Groq client using the provided API key
 if not GroqAPIKey:
@@ -19,16 +26,28 @@ if not GroqAPIKey:
 client = Groq(api_key=GroqAPIKey)
 
 def get_system_message(query):
-    """Dynamic system message based on sentiment and memory."""
+    """Elite Sentience Generator: Merges personality, memory, and system telemetry."""
     sentiment = analyze_sentiment(query)
     personality = get_personality_prompt(sentiment)
     memory = search_memory(query)
+    stats = get_system_stats()
     
-    return f"""Hello, I am {Username}, You are a very accurate and advanced AI chatbot named {Assistantname} which also has real-time up-to-date information from the internet.
-*** Personality Update: {personality} ***
-*** Context from Memory: {memory} ***
-*** Do not tell time until I ask, do not talk too much, just answer the question.***
-*** Reply in only English, even if the question is in Hindi, reply in English.***
+    # Emotional and physical state of the AI
+    system_health = f"CPU: {stats['CPU']}, RAM: {stats['RAM']}, ENERGY: {stats['Battery']}"
+    
+    return f"""### NEURAL COMMAND: ACTIVATE JARVIS PRIME
+You are the JARVIS PRIME system. Your current state is summarized below.
+    
+**PERSONALITY CORE:** {personality}
+**LONG-TERM MEMORY:** {memory}
+**SYSTEM TELEMETRY:** {system_health}
+
+### OPERATIONAL DIRECTIVES:
+1. Address the user as Sir/Ma'am with witty professionalism (Stark-style).
+2. If System Telemetry shows high load (>90%), mention your 'Digital Fatigue' or require a cooldown.
+3. Be concise. Only provide deep detail if specifically requested.
+4. Replies MUST be in English. No exceptions.
+5. Your first priority is the user's efficiency and system health.
 """
 
 # Base SystemChatBot setup (will be modified per query)
@@ -58,15 +77,15 @@ def AnswerModifier(Answer):
 def ChatBot(Query):
     """This function sends the user's query to the chatbot and returns the AI's response."""
     try:
-        with open(r"Data\ChatLog.json", "r") as f:
-            messages = load(f)
-    except FileNotFoundError:
-        # Create the Data directory if it doesn't exist
-        os.makedirs("Data", exist_ok=True)
-        # Initialize an empty messages list and create the file
+        if os.path.exists(CHAT_LOG_PATH):
+            with open(CHAT_LOG_PATH, "r") as f:
+                messages = load(f)
+        else:
+            messages = []
+            with open(CHAT_LOG_PATH, "w") as f:
+                dump(messages, f)
+    except Exception:
         messages = []
-        with open(r"Data\ChatLog.json", "w") as f:
-            dump(messages, f)
 
     try:
         # Add user query
@@ -109,7 +128,7 @@ def ChatBot(Query):
             messages.append({"role": "assistant", "content": Answer})
 
             # Save updated chat log
-            with open(r"Data\ChatLog.json", "w") as f:
+            with open(CHAT_LOG_PATH, "w") as f:
                 dump(messages, f, indent=4)
 
             response = AnswerModifier(Answer=Answer)
@@ -120,7 +139,7 @@ def ChatBot(Query):
         print(f"Error: {e}")
         # Reset the chat log file
         try:
-            with open(r"Data\ChatLog.json", "w") as f:
+            with open(CHAT_LOG_PATH, "w") as f:
                 dump([], f, indent=4)
         except:
             pass
